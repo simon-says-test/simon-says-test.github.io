@@ -71,7 +71,7 @@ New databases are created with a default `public` schema. When using PG Admin, i
 ### Migrating the database
 This could be done programatically 
  1. Run the following command from a command line, substituting hostname, passwords etc. as appropriate:  
- ```shell
+ ```sh
  pg_dump -d "user=postgresadmin@dev-temp-store password=<password1>  host=dev-temp-store.postgres.database.azure.com port=5432 dbname=postgres sslmode=require" | psql -d "user=postgres@psql-rafb-dev password=<password2> host=psql-rafb-dev.postgres.database.azure.com port=5432 dbname=rafb sslmode=require"
  ```
 
@@ -109,7 +109,7 @@ Either way, rename the schema afterwards as follows:
  ## Test
  Ensure the changes have been effective with PG Admin, or from the command prompt with pgcli:
  1. From a command prompt, run the following command, substituting in the appropriate host and password etc.:  
-```shell
+```sh
 pgcli postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require
 ```
 1. Then the following:  
