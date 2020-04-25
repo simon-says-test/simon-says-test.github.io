@@ -25,14 +25,14 @@ I need to update the PostgreSQL version of a Azure Database for PostgreSQL serve
 
 ## Procedure:
 ### Creating a new server and database
-This could be done programatically but for this excercise, it can be easiy achieved through the portal.
+This could be done programatically but for this exercise, it can be easily achieved through the portal.
  1. Create a new Azure Database for PostgreSQL server with the following properties:
     * Type: Single server
     * Subscription: `<subscription>` (as per environment)
     * Resource group: `<resource group>` (as per environment)
     * Server name: `<server name>` e.g. `psql-rafb-dev` (as per naming conventions)
     * Data source : `None`
-    * Location: `(Europe) UK West`
+    * Location: `(Europe) UK South`
     * Version: `11`
     * Compute + storage: 
       * Type: `Basic`  
@@ -48,8 +48,8 @@ New databases are created with a default `public` schema. When using PG Admin, i
  1. Connect to the new server with PG Admin, using the administrator account details entered above.
  1. Create a new database, e.g. `rafb`.
  1. Run the following query on the public schema of the new database:
-    
-    <code>CREATE ROLE read_write;
+    ```
+    CREATE ROLE read_write;
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO read_write;  
     GRANT SELECT, USAGE ON ALL SEQUENCES IN SCHEMA public TO read_write;
@@ -66,10 +66,16 @@ New databases are created with a default `public` schema. When using PG Admin, i
     GRANT read_write to read_write_migrate;
 
     CREATE USER read_write_migrate_user WITH PASSWORD '<password2>';  
-    GRANT read_write_migrate TO read_write_migrate_user; </code>
-
+    GRANT read_write_migrate TO read_write_migrate_user;
+    ```
 ### Migrating the database
-Again, this could be done programatically but can be easily achieved through PG Admin. 
+This could be done programatically 
+ 1. Run the following command from a command line, substituting hostname, passwords etc. as appropriate:  
+ ```
+ pg_dump -d "user=postgresadmin@dev-temp-store password=<password1>  host=dev-temp-store.postgres.database.azure.com port=5432 dbname=postgres sslmode=require" | psql -d "user=postgres@psql-rafb-dev password=<password2> host=psql-rafb-dev.postgres.database.azure.com port=5432 dbname=rafb sslmode=require"
+ ```
+
+Alternatively it can be be easily achieved through PG Admin: 
  1. Connect to the **old** server with PG Admin, using appropriate administrator account details.
  1. Right-click on the `public` schema and click `Backup`.
  1. Select the following options:
@@ -94,6 +100,17 @@ Again, this could be done programatically but can be easily achieved through PG 
     * Don't save
       * Owner
     * Queries
-      * Clean before restore
+      * Clean before restore  
+
+Either way, rename the schema afterwards as follows:
  1. Right-click on the `public` schema and select `Properties`.
  1. Amend the name as appropriate and click `OK`.
+
+ ## Test
+ Ensure the changes have been effective with PG Admin, or from the command prompt with pgcli:
+ 1. From a command prompt, run the following command, substituting in the appropriate host and password etc.:  
+`pgcli postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require`
+</code>
+1. Then the following:  
+`
+SELECT * FROM public.registrations LIMIT 10`
