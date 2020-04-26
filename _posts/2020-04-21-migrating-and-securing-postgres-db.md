@@ -4,15 +4,13 @@ date: 2020-04-21 16:10:00 -0000
 categories: Database PostgreSQL
 ---
 
-# Migrating and securing a PostgreSQL database
-
 ## Scenario
 I need to update the PostgreSQL version of a Azure Database for PostgreSQL server.
 
- * the server is currently running v9 and needs to go to v11.
+ * The server is currently running v9 and needs to go to v11.
  * Azure Database for PostgreSQL servers cannot be upgraded in place.
- * the server was incorrectly configured: the sole database on the server is under the `public` schema in the default `postgres` database.
- * the permissions model was also configured incorrectly: the services accessing this database rely on a user with full schema permissions - this represents a security threat.
+ * The server was incorrectly configured: the sole database on the server is under the `public` schema in the default `postgres` database.
+ * The permissions model was also configured incorrectly: the services accessing this database rely on a user with full schema permissions - this represents a security threat.
 
 ## Objectives:
  * Create new Azure Database for PostgreSQL server at version 11.
@@ -48,6 +46,7 @@ New databases are created with a default `public` schema. When using PG Admin, i
  1. Connect to the new server with PG Admin, using the administrator account details entered above.
  1. Create a new database, e.g. `rafb`.
  1. Run the following query on the public schema of the new database:
+
     ```sql
     CREATE ROLE read_write;
 
@@ -68,14 +67,15 @@ New databases are created with a default `public` schema. When using PG Admin, i
     CREATE USER read_write_migrate_user WITH PASSWORD '<password2>';  
     GRANT read_write_migrate TO read_write_migrate_user;
     ```
+
 ### Migrating the database
-This could be done programatically 
- 1. Run the following command from a command line, substituting hostname, passwords etc. as appropriate:  
+This can be done easily via the command line: 
+ 1. Run the following command, substituting hostname, passwords etc. as appropriate:  
  ```sh
  pg_dump -d "user=postgresadmin@dev-temp-store password=<password1>  host=dev-temp-store.postgres.database.azure.com port=5432 dbname=postgres sslmode=require" | psql -d "user=postgres@psql-rafb-dev password=<password2> host=psql-rafb-dev.postgres.database.azure.com port=5432 dbname=rafb sslmode=require"
  ```
 
-Alternatively it can be be easily achieved through PG Admin: 
+Alternatively it can also be achieved through PG Admin: 
  1. Connect to the **old** server with PG Admin, using appropriate administrator account details.
  1. Right-click on the `public` schema and click `Backup`.
  1. Select the following options:
@@ -107,12 +107,16 @@ Either way, rename the schema afterwards as follows:
  1. Amend the name as appropriate and click `OK`.
 
  ## Test
+ 
  Ensure the changes have been effective with PG Admin, or from the command prompt with pgcli:
- 1. From a command prompt, run the following command, substituting in the appropriate host and password etc.:  
+ 1. From a command prompt, run the following command, substituting in the appropriate host and password etc.: 
+
 ```sh
-pgcli postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require
+pgcli "postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require"
 ```
+
 1. Then the following:  
+
 ```sql
 SELECT * FROM public.registrations LIMIT 10
 ```
