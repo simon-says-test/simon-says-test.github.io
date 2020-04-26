@@ -22,8 +22,9 @@ I need to update the PostgreSQL version of a Azure Database for PostgreSQL serve
     * a user for performing migrations
  * Migrate the data from the old server to the new server.
 
- ## Testing
+## Objectives
  Ensure the changes have been effective with PG Admin, or from the command prompt with pgcli:
+ 
  1. From a command prompt, run the following command, substituting in the appropriate host and password etc.: 
   ```sh
   pgcli "postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require"
