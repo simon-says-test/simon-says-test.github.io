@@ -3,6 +3,7 @@ title:  "Migrating and securing a PostgreSQL database"
 date: 2020-04-21 16:10:00 -0000
 categories: Database PostgreSQL
 ---
+# Migrating and securing a PostgreSQL database
 
 ## Scenario
 I need to update the PostgreSQL version of a Azure Database for PostgreSQL server.
@@ -12,7 +13,7 @@ I need to update the PostgreSQL version of a Azure Database for PostgreSQL serve
  * The server was incorrectly configured: the sole database on the server is under the `public` schema in the default `postgres` database.
  * The permissions model was also configured incorrectly: the services accessing this database rely on a user with full schema permissions - this represents a security threat.
 
-## Objectives:
+## Objectives
  * Create new Azure Database for PostgreSQL server at version 11.
  * Create a new database and schema for data to be migrated.
  * Setup an appropriate permission model to minimise user privilege:
@@ -21,14 +22,14 @@ I need to update the PostgreSQL version of a Azure Database for PostgreSQL serve
     * a user for performing migrations
  * Migrate the data from the old server to the new server.
 
-## Procedure:
+## Procedure
 ### Creating a new server and database
 This could be done programatically but for this exercise, it can be easily achieved through the portal.
  1. Create a new Azure Database for PostgreSQL server with the following properties:
     * Type: Single server
-    * Subscription: `<subscription>` (as per environment)
-    * Resource group: `<resource group>` (as per environment)
-    * Server name: `<server name>` e.g. `psql-rafb-dev` (as per naming conventions)
+    * Subscription: *`<subscription>`* (as per environment)
+    * Resource group: *`<resource group>`* (as per environment)
+    * Server name: *`<server name>`* e.g. `psql-rafb-dev` (as per naming conventions)
     * Data source : `None`
     * Location: `(Europe) UK South`
     * Version: `11`
@@ -37,8 +38,8 @@ This could be done programatically but for this exercise, it can be easily achie
       * Storage: `50 GB`
       * Backup Retention Period: `14 Days`
     * Administrator account:
-      * Admin username `<username>` (Store in KeePass)
-      * Password: `<password>` (Store in KeePass)
+      * Admin username *`<username>`* (Store in KeePass)
+      * Password: *`<password>`* (Store in KeePass)
  1. Once deployed, update `Connection security` to whitelist the IP address of the machine from which to perform the migration.
 
 ### Creating the permissions model
@@ -105,9 +106,8 @@ Alternatively it can also be achieved through PG Admin:
 Either way, rename the schema afterwards as follows:
  1. Right-click on the `public` schema and select `Properties`.
  1. Amend the name as appropriate and click `OK`.
-
- ## Test
  
+ ## Test
  Ensure the changes have been effective with PG Admin, or from the command prompt with pgcli:
  1. From a command prompt, run the following command, substituting in the appropriate host and password etc.: 
 
