@@ -2,10 +2,20 @@
 ---
 
 @import "{{ site.theme }}";
+title {
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    margin: 0 0 1em 0em;
+}
 .credits {
     display: none;
 }
 code {
     padding: 0;
     color: #aa759f;
+}
+ul > ul {
+    margin: 0;
 }
