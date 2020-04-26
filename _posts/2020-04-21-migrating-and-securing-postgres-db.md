@@ -119,7 +119,7 @@ Either way, rename the schema afterwards as follows:
  
  ## Testing
  Ensure the changes have been effective with PG Admin, or from the command prompt with pgcli:
- 1. From a command prompt, run the following command, substituting in the appropriate host and password etc.: 
+ 1. From a command prompt, run the following command, substituting in the appropriate host and password etc: 
   ```sh
   pgcli "postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require"
   ```
