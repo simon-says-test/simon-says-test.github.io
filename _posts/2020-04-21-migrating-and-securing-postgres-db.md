@@ -27,9 +27,9 @@ I need to update the PostgreSQL version of a Azure Database for PostgreSQL serve
 This could be done programatically but for this exercise, it can be easily achieved through the portal.
  1. Create a new Azure Database for PostgreSQL server with the following properties:
     * Type: Single server
-    * Subscription: *`<subscription>`* (as per environment)
-    * Resource group: *`<resource group>`* (as per environment)
-    * Server name: *`<server name>`* e.g. `psql-rafb-dev` (as per naming conventions)
+    * Subscription: `<subscription>` (as per environment)
+    * Resource group: `<resource group>` (as per environment)
+    * Server name: `<server name>` e.g. `psql-rafb-dev` (as per naming conventions)
     * Data source : `None`
     * Location: `(Europe) UK South`
     * Version: `11`
@@ -38,8 +38,8 @@ This could be done programatically but for this exercise, it can be easily achie
       * Storage: `50 GB`
       * Backup Retention Period: `14 Days`
     * Administrator account:
-      * Admin username *`<username>`* (Store in KeePass)
-      * Password: *`<password>`* (Store in KeePass)
+      * Admin username `<username>` (Store in KeePass)
+      * Password: `<password>` (Store in KeePass)
  1. Once deployed, update `Connection security` to whitelist the IP address of the machine from which to perform the migration.
 
 ### Creating the permissions model
@@ -107,16 +107,16 @@ Either way, rename the schema afterwards as follows:
  1. Right-click on the `public` schema and select `Properties`.
  1. Amend the name as appropriate and click `OK`.
  
- ## Test
+ ## Testing
  Ensure the changes have been effective with PG Admin, or from the command prompt with pgcli:
  1. From a command prompt, run the following command, substituting in the appropriate host and password etc.: 
 
-```sh
-pgcli "postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require"
-```
+  ```sh
+  pgcli "postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require"
+  ```
 
 1. Then the following:  
 
-```sql
-SELECT * FROM public.registrations LIMIT 10
-```
+  ```sql
+  SELECT * FROM public.registrations LIMIT 10
+  ```

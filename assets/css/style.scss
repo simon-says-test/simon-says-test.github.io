@@ -2,7 +2,7 @@
 ---
 
 @import "{{ site.theme }}";
-title {
+#title {
     margin: 0;
     padding: 0;
 }
@@ -16,6 +16,6 @@ code {
     padding: 0;
     color: #aa759f;
 }
-ul ul {
+ul ul, ol ul, ul ol, ol ol {
     margin: 0;
 }
