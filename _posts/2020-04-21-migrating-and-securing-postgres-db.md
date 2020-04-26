@@ -22,6 +22,16 @@ I need to update the PostgreSQL version of a Azure Database for PostgreSQL serve
     * a user for performing migrations
  * Migrate the data from the old server to the new server.
 
+ ## Testing
+ Ensure the changes have been effective with PG Admin, or from the command prompt with pgcli:
+ 1. From a command prompt, run the following command, substituting in the appropriate host and password etc.: 
+  ```sh
+  pgcli "postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require"
+  ```
+1. Then the following:  
+  ```sql
+  SELECT * FROM public.registrations LIMIT 10
+  ```
 ## Procedure
 ### Creating a new server and database
 This could be done programatically but for this exercise, it can be easily achieved through the portal.
@@ -110,13 +120,10 @@ Either way, rename the schema afterwards as follows:
  ## Testing
  Ensure the changes have been effective with PG Admin, or from the command prompt with pgcli:
  1. From a command prompt, run the following command, substituting in the appropriate host and password etc.: 
-
   ```sh
   pgcli "postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require"
   ```
-
 1. Then the following:  
-
   ```sql
   SELECT * FROM public.registrations LIMIT 10
   ```
