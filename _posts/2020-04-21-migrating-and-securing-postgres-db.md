@@ -40,7 +40,7 @@ This could be done programatically but for this exercise, it can be easily achie
     * Administrator account:
       * Admin username `<username>` (Store in KeePass)
       * Password: `<password>` (Store in KeePass)
- 1. Once deployed, update `Connection security` to whitelist the IP address of the machine from which to perform the migration.
+ 1. Once deployed, update `Connection security` to whitelist the IP address of the machine from which to perform the migration and the app services which connect to the database server.
 
 ### Creating the permissions model
 New databases are created with a default `public` schema. When using PG Admin, it is easier to restore to a schema with same name and then rename the schema afterwards. The steps below, therefore, setup the user permissions model on the public schema:
@@ -103,18 +103,24 @@ Alternatively it can also be achieved through PG Admin:
     * Queries
       * Clean before restore  
 
-Either way, rename the schema afterwards as follows:
+Either way, rename the schema afterwards as follows and set as default schema:
  1. Right-click on the `public` schema and select `Properties`.
  1. Amend the name as appropriate and click `OK`.
+ 1. Run the following query on the the new database:
+
+    ```sql
+    ALTER ROLE read_write_user SET search_path TO registrations
+    ALTER ROLE read_write_migrate_user SET search_path TO registrations
+    ```
  
 ## Testing
  Ensure the changes have been effective with PG Admin, or from the command prompt with pgcli:
  
  1. From a command prompt, run the following command, substituting in the appropriate host and password etc: 
-  ```sh
-  pgcli "postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require"
-  ```
-1. Then the following:  
-  ```sql
-  SELECT * FROM public.registrations LIMIT 10
-  ```
+    ```sh
+    pgcli "postgres://postgresadmin@dev-temp-store:<password>@dev-temp-store.postgres.database.azure.com:5432/postgres?sslmode=require"
+    ```
+    1. Then the following:  
+    ```sql
+    SELECT * FROM public.registrations LIMIT 10
+    ```
