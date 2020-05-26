@@ -50,6 +50,8 @@ New databases are created with a default `public` schema. When using PG Admin, i
 
     ```sql
     CREATE ROLE read_write;
+    
+    GRANT USAGE ON SCHEMA public TO read_write;  
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO read_write;  
     GRANT SELECT, USAGE ON ALL SEQUENCES IN SCHEMA public TO read_write;
@@ -61,9 +63,12 @@ New databases are created with a default `public` schema. When using PG Admin, i
     GRANT read_write TO read_write_user;
 
     CREATE ROLE read_write_migrate;
-
-    GRANT ALL ON SCHEMA public TO read_write_migrate;  
     GRANT read_write to read_write_migrate;
+
+    GRANT ALL ON SCHEMA public TO read_write_migrate; 
+
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO read_write_migrate;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO read_write_migrate; 
 
     CREATE USER read_write_migrate_user WITH PASSWORD '<password2>';  
     GRANT read_write_migrate TO read_write_migrate_user;
@@ -73,7 +78,7 @@ New databases are created with a default `public` schema. When using PG Admin, i
 This can be done easily via the command line: 
  1. Run the following command, substituting hostname, passwords etc. as appropriate:  
  ```sh
- pg_dump -d "user=postgresadmin@dev-temp-store password=<password1>  host=dev-temp-store.postgres.database.azure.com port=5432 dbname=postgres sslmode=require" | psql -d "user=postgres@psql-rafb-dev password=<password2> host=psql-rafb-dev.postgres.database.azure.com port=5432 dbname=rafb sslmode=require"
+ pg_dump -d "user=postgresadmin@dev-temp-store password=<password1>  host=dev-temp-store.postgres.database.azure.com port=5432 dbname=postgres sslmode=require" | psql -d "user=read_write_migrate_user@psql-rafb-dev password=<password2> host=psql-rafb-dev.postgres.database.azure.com port=5432 dbname=rafb sslmode=require"
  ```
 
 Alternatively it can also be achieved through PG Admin: 
@@ -109,8 +114,8 @@ Either way, rename the schema afterwards as follows and set as default schema:
  1. Run the following query on the the new database:
 
     ```sql
-    ALTER ROLE read_write_user SET search_path TO registrations
-    ALTER ROLE read_write_migrate_user SET search_path TO registrations
+    ALTER ROLE read_write_user SET search_path TO registrations;
+    ALTER ROLE read_write_migrate_user SET search_path TO registrations;
     ```
  
 ## Testing
